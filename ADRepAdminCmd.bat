@@ -1,47 +1,23 @@
-:: RepAdmin Commands for Troubleshooting 
+@echo off
+setlocal EnableExtensions DisableDelayedExpansion
 
-:: Forces the KCC on the targeted domain controller to immediately recalculate its inbound replication topology
-repadmin.exe /kcc
+if "%~1"=="" goto :usage
 
-:: Allows an admin to view or modify the Password Replication Policy (PRP) for Read-only Domain Controllers (RODCs)
-repadmin.exe /prp
+rem Pass a complete repadmin command line through to repadmin.exe.
+repadmin.exe %*
+exit /b %errorlevel%
 
-:: Displays inbound replication requests that the domain controller needs to issue to become consistent with its source replication partners
-repadmin.exe /queue
-
-:: Triggers the immediate replication of the specified directory partition to the destination domain controller from the source domain controller
-repadmin.exe /replicate
-
-:: Replicates a single object between any two domain controllers that have common directory partitions
-repadmin.exe /replsingleobj
-
-:: Quickly and concisely summarizes the replication state and relative health of an Active Directory forest”
-repadmin.exe /replsummary
-
-:: Triggers replication of passwords for the specified user(s) from the source domain controller to one or more RODCs”
-repadmin.exe /rodcpwdrepl
-
-:: Displays the attributes of an object
-repadmin.exe /showattr
-
-:: Displays the last time the domain controller(s) was backed up
-repadmin.exe /showbackup
-
-:: Displays the replication metadata for a specified object stored in Active Directory, such as attribute ID, version number, originating and local Update Sequence Number (USN), and originating server's GUID and data and time stamp
-repadmin.exe /showobjmeta
-
-:: Displays the replication status and when the specified domain controller last attempted to inbound replicate Active Directory partitions
-repadmin.exe /showrepl
-
-:: Displays the highest committed Update Sequence Number (USN) that the targeted domain controller's copy of Active Directory shows as committed for itself and its transitive partners
-repadmin.exe /showutdvec
-
-::Synchronizes a specified domain controller with all replication partners
-repadmin.exe /syncall
-
-:: Optional for Authentication
-:: DOMAIN\UserName
-/u:
-
-:: Password for the user account
-/pw:
+:usage
+echo Usage: %~nx0 ^<repadmin arguments^>
+echo.
+echo Common commands:
+echo   %~nx0 /kcc ^<domain-controller^>
+echo   %~nx0 /queue ^<domain-controller^>
+echo   %~nx0 /replsummary
+echo   %~nx0 /showrepl ^<domain-controller^>
+echo   %~nx0 /showobjmeta ^<domain-controller^> ^<object-DN^>
+echo   %~nx0 /showutdvec ^<domain-controller^> ^<naming-context^>
+echo   %~nx0 /syncall ^<domain-controller^> /A /e /d
+echo.
+echo Run repadmin.exe /? or repadmin.exe /help:command for complete syntax.
+exit /b 2

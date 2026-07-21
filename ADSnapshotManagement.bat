@@ -1,12 +1,36 @@
-:: To make a snapshot, type the following command in an elevated Command Prompt (cmd.exe) window:
-ntdsutil.exe "activate instance ntds" "snapshot" "create" q q
+@echo off
+setlocal EnableExtensions DisableDelayedExpansion
 
-:: To view all snapshots, type the following command in an elevated Command Prompt (cmd.exe) window to get a numbered list of all available snapshots:
-ntdsutil.exe "activate instance ntds" "snapshot" "list all" q q
+if /I "%~1"=="create" goto :create
+if /I "%~1"=="list" goto :list
+if /I "%~1"=="mount" goto :mount
+if /I "%~1"=="expose" goto :expose
+goto :usage
 
-:: To mount a snapshot, type the following command in an elevated Command Prompt (cmd.exe) window, using the number of the snapshot you want to mount from the previous command:
-ntdsutil.exe "activate instance ntds" "snapshot" "mount GUID" q q
-::The preceding command will output the folder where the database is mounted.
+:create
+ntdsutil.exe "activate instance ntds" snapshot create quit quit
+exit /b %errorlevel%
 
-:: Run the following command to expose it as an LDAP Store:
-dsamain.exe -dpbath "Location from previous command" -ldapport PortNumber
+:list
+ntdsutil.exe "activate instance ntds" snapshot "list all" quit quit
+exit /b %errorlevel%
+
+:mount
+if "%~2"=="" goto :usage
+ntdsutil.exe "activate instance ntds" snapshot "mount %~2" quit quit
+exit /b %errorlevel%
+
+:expose
+if "%~3"=="" goto :usage
+set "ldap_port=%~3"
+for /f "delims=0123456789" %%A in ("%ldap_port%") do goto :usage
+dsamain.exe -dbpath "%~2" -ldapport %ldap_port%
+exit /b %errorlevel%
+
+:usage
+echo Usage:
+echo   %~nx0 create
+echo   %~nx0 list
+echo   %~nx0 mount ^<snapshot-GUID^>
+echo   %~nx0 expose ^<snapshot-ntds.dit-path^> ^<LDAP-port^>
+exit /b 2

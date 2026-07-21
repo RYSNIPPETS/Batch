@@ -1,59 +1,34 @@
-:: {USER-STRING} ::
-REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "{USER-STRING}"
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "{USER-STRING}" /t "REG_SZ" /d "\\ComputerName\Users\UserName\AppData\Roaming\Microsoft\Windows\Libraries"
+@echo off
+setlocal EnableExtensions DisableDelayedExpansion
 
-:: Administrative Tools ::
-REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Administrative Tools"
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Administrative Tools" /t "REG_SZ" /d "\\ComputerName\Users\UserName\Start Menu\Programs\Administrative Tools"
+if "%~1"=="" goto :usage
+set "redirect_root=%~1"
+set "key=HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
+set "roaming=%redirect_root%\AppData\Roaming"
 
-:: AppData ::
-REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "AppData"
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "AppData" /t "REG_SZ" /d "\\ComputerName\Users\UserName\AppData\Roaming"
+call :set_folder "AppData" "%roaming%" || exit /b 1
+call :set_folder "Desktop" "%redirect_root%\Desktop" || exit /b 1
+call :set_folder "Favorites" "%redirect_root%\Favorites" || exit /b 1
+call :set_folder "My Pictures" "%redirect_root%\Pictures" || exit /b 1
+call :set_folder "Personal" "%redirect_root%\Documents" || exit /b 1
+call :set_folder "Administrative Tools" "%roaming%\Microsoft\Windows\Start Menu\Programs\Administrative Tools" || exit /b 1
+call :set_folder "NetHood" "%roaming%\Microsoft\Windows\Network Shortcuts" || exit /b 1
+call :set_folder "PrintHood" "%roaming%\Microsoft\Windows\Printer Shortcuts" || exit /b 1
+call :set_folder "Programs" "%roaming%\Microsoft\Windows\Start Menu\Programs" || exit /b 1
+call :set_folder "Recent" "%roaming%\Microsoft\Windows\Recent" || exit /b 1
+call :set_folder "SendTo" "%roaming%\Microsoft\Windows\SendTo" || exit /b 1
+call :set_folder "Start Menu" "%roaming%\Microsoft\Windows\Start Menu" || exit /b 1
+call :set_folder "Startup" "%roaming%\Microsoft\Windows\Start Menu\Programs\Startup" || exit /b 1
+call :set_folder "Templates" "%roaming%\Microsoft\Windows\Templates" || exit /b 1
 
-:: Desktop ::
-REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Desktop"
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Desktop" /t "REG_SZ" /d "\\ComputerName\Users\UserName\Desktop"
+echo Folder locations updated. Sign out and back in to apply them.
+exit /b 0
 
-:: Favorites ::
-REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Favorites"
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Favorites" /t "REG_SZ" /d "\\ComputerName\Users\UserName\Favorites"
+:set_folder
+reg.exe add "%key%" /v "%~1" /t REG_EXPAND_SZ /d "%~2" /f >nul
+exit /b %errorlevel%
 
-:: My Pictures ::
-REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "My Pictures"
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "My Pictures" /t "REG_SZ" /d "\\ComputerName\Users\UserName\Pictures"
-
-:: NetHood ::
-REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "NetHood"
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "NetHood" /t "REG_SZ" /d "\\ComputerName\Users\UserName\AppData\Roaming\Microsoft\Windows\Network Shortcuts"
-
-:: Personal ::
-REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Personal"
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Personal" /t "REG_SZ" /d "\\ComputerName\Users\UserName\Documents"
-
-:: PrintHood ::
-REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "PrintHood"
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "PrintHood" /t "REG_SZ" /d "\\ComputerName\Users\UserName\AppData\Roaming\Microsoft\Windows\Printer Shortcuts"
-
-:: Programs ::
-REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Programs"
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Programs" /t "REG_SZ" /d "\\ComputerName\Users\UserName\Start Menu\Programs"
-
-:: Recent ::
-REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Recent"
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Recent" /t "REG_SZ" /d "\\ComputerName\Users\UserName\AppData\Roaming\Microsoft\Windows\Recent"
-
-:: SendTo ::
-REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "SendTo"
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "SendTo" /t "REG_SZ" /d "\\ComputerName\Users\UserName\AppData\Roaming\Microsoft\Windows\SendTo"
-
-:: Start Menu ::
-REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Start Menu"
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Start Menu" /t "REG_SZ" /d "\\ComputerName\Users\UserName\Start Menu"
-
-:: Startup ::
-REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Startup"
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Startup" /t "REG_SZ" /d "\\ComputerName\Users\UserName\Start Menu\Programs\Startup"
-
-:: Templates ::
-REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Templates"
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders" /v "Templates" /t "REG_SZ" /d "\\ComputerName\Users\UserName\AppData\Roaming\Microsoft\Windows\Templates"
+:usage
+echo Usage: %~nx0 ^<redirect-root^>
+echo Example: %~nx0 "\\fileserver\Users\username"
+exit /b 2

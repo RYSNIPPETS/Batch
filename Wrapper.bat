@@ -1,3 +1,3 @@
-# 2>NUL & @CLS & PUSHD "%~dp0" & "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -nol -nop -ep bypass "[IO.File]::ReadAllText('%~f0')|iex" & POPD & EXIT /B
+# 2>nul & @echo off & setlocal & set "BATCH_WRAPPER_PATH=%~f0" & powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create([IO.File]::ReadAllText($env:BATCH_WRAPPER_PATH)))" & exit /b
 
 'Hello, World!' | Write-Output

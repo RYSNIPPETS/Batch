@@ -19,8 +19,8 @@ system and Active Directory administration.
 - `ADManageReplicationCMD.bat` - enables or disables inbound and outbound
   replication.
 - `ADReplicationForce.bat` - forces replication across partitions and sites.
-- `ADRepAdminCmd.bat` - provides a reference collection of `repadmin`
-  troubleshooting commands.
+- `ADRepAdminCmd.bat` - forwards arguments to `repadmin` and prints common
+  troubleshooting examples when called without arguments.
 - `ADScan4LingeringObjects.bat` - scans for and removes lingering directory
   objects.
 
@@ -48,29 +48,28 @@ system and Active Directory administration.
 
 ### Windows services
 
-- `GerRunningSvc.bat` - lists running services and their associated accounts.
+- `GetRunningServices.bat` - lists running services and their associated
+  accounts.
 - `SetAccount4Service.bat` - changes a service account and restarts the
   service.
 
 ### Windows system administration
 
-- `ConvertMBR2GPT.bat` - contains DiskPart commands for cleaning a disk and
-  converting it from MBR to GPT.
+- `ConvertMBR2GPT.bat` - validates or performs an in-place system-disk
+  conversion from MBR to GPT.
 - `UpdateWindowsProductKey.bat` - changes the Windows edition and product key
   with DISM.
 - `ChromeClassFix.bat` - removes selected Chrome class-handler registry values
-  from user profiles using VBScript-style WMI automation.
+  from loaded user profiles using PowerShell and CIM.
 - `Wrapper.bat` - demonstrates a hybrid batch and PowerShell script wrapper.
 
 ## Important usage notes
 
-These files are administrative examples and command references. Many contain
-sample domain names, server names, paths, credentials, product keys, or other
-placeholders that must be replaced before use. Several scripts require an
-elevated Command Prompt and can make destructive or difficult-to-reverse
-changes.
+These files are administrative examples and command references. They require
+their environment-specific values as command-line arguments and print usage
+help when required arguments are missing. Several scripts require an elevated
+Command Prompt and can make destructive or difficult-to-reverse changes.
 
-Read and adapt each script before running it. In particular,
-`ConvertMBR2GPT.bat` includes DiskPart's `clean all` command, which erases the
-selected disk. Test changes in a non-production environment and maintain a
-verified backup.
+Read each script's usage output before running it. High-risk non-interactive
+operations require an explicit `/force` or `/convert` argument. Test changes
+in a non-production environment and maintain a verified backup.

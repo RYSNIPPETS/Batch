@@ -1,8 +1,16 @@
-::Use the following command to restore the default domain policy to its default settings on an elevated Command Prompt (cmd.exe):
-dcgpofix.exe /target:Domain
+@echo off
+setlocal EnableExtensions DisableDelayedExpansion
 
-:: Use the following command to restore the default domain controller policy to its default settings on an elevated Command Prompt (cmd.exe):
-dcgpofix.exe /target:DC
+if /I "%~1"=="domain" goto :run
+if /I "%~1"=="dc" goto :run
+if /I "%~1"=="both" goto :run
+goto :usage
 
-:: Use the following command to restore both the Default Domain Policy and the Default Domain Controller Policy to its default settings on an elevated Command Prompt (cmd.exe):
-dcgpofix.exe /target:Both
+:run
+dcgpofix.exe /target:%~1
+exit /b %errorlevel%
+
+:usage
+echo Usage: %~nx0 ^<domain^|dc^|both^>
+echo This resets the selected default GPO to its original settings.
+exit /b 2
